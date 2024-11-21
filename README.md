@@ -11,6 +11,9 @@
 
 # ViLGOD
 
+![Overview](assets/method.png#gh-light-mode-only)
+![Overview](assets/method.png#gh-dark-mode-only)
+
 ## 🚩News
 
 `[2024-11-20]:` Code released.<br>
