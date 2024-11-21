@@ -13,9 +13,9 @@
 
 ## 🚩News
 
-`[2024-11-20]:` Code released.
-`[2024-09-10]:` ViLGOD has been accepted for BMVC 2024 as an oral presentation. See you in Glasgow!
-`[2024-08-07]:` ViLGOD [arXiv](https://arxiv.org/abs/2408.03790) paper released.
+`[2024-11-20]:` Code released.<br>
+`[2024-09-10]:` ViLGOD has been accepted for BMVC 2024 as an oral presentation. See you in Glasgow!<br>
+`[2024-08-07]:` ViLGOD [arXiv](https://arxiv.org/abs/2408.03790) paper released.<br>
 
 ## 📝 TODO List
 
