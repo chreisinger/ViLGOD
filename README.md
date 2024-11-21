@@ -50,7 +50,11 @@ source <home/to/virtualenv>/bin/activate
 
 ```bash
 pip install torch==1.13.1+cu117 torchvision==0.14.1+cu117 torchaudio==0.13.1 --extra-index-url https://download.pytorch.org/whl/cu117
+```
+```bash
 pip install spconv-cu117
+```
+```bash
 pip install numpy==1.21.5 \
             llvmlite==0.39.0 \
             numba==0.56.4 \
@@ -66,7 +70,8 @@ pip install numpy==1.21.5 \
             av2==0.2.0 \
             kornia==0.5.8 \
             waymo-open-dataset-tf-2-11-0
-
+```
+```bash
 pip install hdbscan \
             hydra-core \
             ftfy \
@@ -75,9 +80,11 @@ pip install hdbscan \
             fvcore \
             torch_scatter \
             filterpy
-
+```
+```bash
 pip install --no-index --no-cache-dir pytorch3d -f https://dl.fbaipublicfiles.com/pytorch3d/packaging/wheels/py38_cu117_pyt1131/download.html
-
+```
+```bash
 pip install numpy==1.23.5
 ```
 
