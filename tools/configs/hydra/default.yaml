@@ -1,0 +1,33 @@
+run:
+    dir: ../outputs/${preprocessor.name}/${join:${pipeline_active}}/${now:%Y-%m-%d}_${now:%H-%M-%S}_seq_${start_sequence}_to_${end_sequence}/
+job:
+    chdir: False
+job_logging:
+    version: 1
+    formatters:
+        simple:
+            format: '[%(asctime)s][%(levelname)s] - %(message)s'
+        colorlog:
+            (): colorlog.ColoredFormatter
+            format: '[%(cyan)s%(asctime)s%(reset)s][%(log_color)s%(levelname)s%(reset)s] - %(message)s'
+            log_colors:
+                DEBUG: purple
+                INFO: green
+                WARNING: yellow
+                ERROR: red
+                CRITICAL: red
+    handlers:
+        console:
+            class: logging.StreamHandler
+            formatter: colorlog
+            stream: ext://sys.stdout
+        file:
+            class: logging.FileHandler
+            formatter: simple
+            filename: ${hydra.runtime.output_dir}/${hydra.job.name}.log
+    root:
+        level: INFO
+        handlers:
+            - console
+            - file
+    disable_existing_loggers: false

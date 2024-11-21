@@ -1,0 +1,108 @@
+defaults:
+    - hydra: default.yaml
+    - preprocessor: waymo.yaml
+    - dataset: ${preprocessor}_dataset.yaml
+    - _self_
+
+# paths & files
+paths:
+    root: ${dataset.DATA_PATH}
+    data: ${paths.root}/${dataset.PROCESSED_DATA_TAG}
+    sequence_data: ${paths.root}/preprocessed_data/vilgod_seq_spatial_2_2nd_run
+    results: ${paths.root}/preprocessed_data/results
+    pseudo_label: ${paths.root}/pseudo_labels_${preprocessor.pseudo_label_tag}
+    clip_model: ../models/clip/
+
+postfix:
+    sequence_data: '.pkl'
+
+# disable gt_sampling
+dataset:
+    DATA_AUGMENTOR:
+        DISABLE_AUG_LIST: ['gt_sampling']
+
+# dataset instance
+dataset_class:
+    _target_: src.datasets.${preprocessor.name}_dataset.${dataset.DATASET}
+    dataset_cfg: ${dataset}
+    class_names: ${preprocessor.class_names}
+
+# data split
+split: train
+
+random_seed: 666
+
+# eval existing results
+results_folder: vilgod_seq_spatial_2_2nd_run
+use_cached_results: False
+load_detection_results: False
+result_path: <path_to_results>
+
+# preprocessing pipeline
+start_sequence: 0 # 0
+end_sequence: 2 # 999
+
+eval_cfg:
+    difficulties: [2] # [1, 2]
+    breakdown_range: False
+    iou_thresholds: [0.4, 0.4, 0.4, 0.4]
+
+pipeline_active: [mask_ground_points, calculate_entropy_scores, spatial_clustering, filter_detections, track_clusters, classification, fit_bounding_boxes_simple, propagate_labels, evaluate_sequence]
+
+pipeline:
+    - name: mask_ground_points
+      args:
+        min_range: 1.5
+        z_offset: 1.723 # https://github.com/url-kaist/patchwork-plusplus/blob/master/patchworkpp/include/patchworkpp.h
+    - name: calculate_entropy_scores
+      args:
+        force: False
+        n_neighbouring_frames: 15
+        skip_frames: 1
+        max_neighbor_point_dist: 0.3
+        max_neighbor_points: 1000
+        include_ground_points: False
+    - name: spatial_clustering
+      args:
+        force: False
+        n_frames: 2
+    - name: filter_detections
+      args:
+        force: False
+    - name: track_clusters
+      args:
+        force: True
+        valid_only: True
+    - name: classification
+      args:
+        image_size: 224
+        key: ${preprocessor.clip.name}_${format_split_join:${preprocessor.clip.prompt_template}}
+        aggregation: 'voting'
+        valid_only: True
+        missing_only: False
+        force: False
+    - name: fit_bounding_boxes_simple
+      args:
+        force: True
+        valid_only: True
+        fg_only: False
+        classification_key: ${preprocessor.clip.name}_${format_split_join:${preprocessor.clip.prompt_template}}
+        method:
+          name: minimum_bounding_rectangle 
+          args: {}
+    - name: propagate_labels
+      args:
+        classification_key: ${preprocessor.clip.name}_${format_split_join:${preprocessor.clip.prompt_template}} # clip_a_point_representation_of_a_3_cls # 
+    - name: evaluate_sequence
+      args:
+        modes: [detection_3d]
+        eval_range: [-50., -20., 50., 20.]
+        # moving false and static false leads to all detections
+        moving: False
+        static: False
+        classification_key: ${preprocessor.clip.name}_${format_split_join:${preprocessor.clip.prompt_template}}
+        detection_3d:
+          class_agnostic: False
+          bev: False
+          score_thresh: 0.0
+          sampling_rate: 1
