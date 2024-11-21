@@ -35,9 +35,9 @@
 - Python 3.8
 - CUDA 11.7
 
-## Environment setup
+### Environment setup
 
-### Creat virtual environment and intstall required packages
+<b>Creat virtual environment and intstall required packages</b>
 
 1) Create virtual environment
 
@@ -88,7 +88,7 @@ pip install --no-index --no-cache-dir pytorch3d -f https://dl.fbaipublicfiles.co
 pip install numpy==1.23.5
 ```
 
-### Clone and install required repositories
+<b>Clone and install required repositories</b>
 1) Clone repository and create folder structure
 ```bash
 git clone git@github.com:chreisinger/ViLGOD.git
